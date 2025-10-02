@@ -1,10 +1,18 @@
 // insert_books.js - Script to populate MongoDB with sample book data
 
+<<<<<<< HEAD
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
 // Use the connection string from the .env file
 const uri = process.env.MONGO_URI;
+=======
+// Import MongoDB client
+const { MongoClient } = require('mongodb');
+
+// Connection URI (replace with your MongoDB connection string if using Atlas)
+const uri = 'mongodb://localhost:27017';
+>>>>>>> 0fcd1a6b59e5934a6c57cfca568ccf5922ad1d48
 
 // Database and collection names
 const dbName = 'plp_bookstore';
@@ -139,6 +147,7 @@ async function insertBooks() {
   const client = new MongoClient(uri);
 
   try {
+<<<<<<< HEAD
     await client.connect();
     const db = client.db(dbName);
     const collection = db.collection(collectionName);
@@ -155,8 +164,66 @@ async function insertBooks() {
     console.error('Error inserting books:', err);
   } finally {
     await client.close();
+=======
+    // Connect to the MongoDB server
+    await client.connect();
+    console.log('Connected to MongoDB server');
+
+    // Get database and collection
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+
+    // Check if collection already has documents
+    const count = await collection.countDocuments();
+    if (count > 0) {
+      console.log(`Collection already contains ${count} documents. Dropping collection...`);
+      await collection.drop();
+      console.log('Collection dropped successfully');
+    }
+
+    // Insert the books
+    const result = await collection.insertMany(books);
+    console.log(`${result.insertedCount} books were successfully inserted into the database`);
+
+    // Display the inserted books
+    console.log('\nInserted books:');
+    const insertedBooks = await collection.find({}).toArray();
+    insertedBooks.forEach((book, index) => {
+      console.log(`${index + 1}. "${book.title}" by ${book.author} (${book.published_year})`);
+    });
+
+  } catch (err) {
+    console.error('Error occurred:', err);
+  } finally {
+    // Close the connection
+    await client.close();
+    console.log('Connection closed');
+>>>>>>> 0fcd1a6b59e5934a6c57cfca568ccf5922ad1d48
   }
 }
 
 // Run the function
+<<<<<<< HEAD
 insertBooks();
+=======
+insertBooks().catch(console.error);
+
+/*
+ * Example MongoDB queries you can try after running this script:
+ *
+ * 1. Find all books:
+ *    db.books.find()
+ *
+ * 2. Find books by a specific author:
+ *    db.books.find({ author: "George Orwell" })
+ *
+ * 3. Find books published after 1950:
+ *    db.books.find({ published_year: { $gt: 1950 } })
+ *
+ * 4. Find books in a specific genre:
+ *    db.books.find({ genre: "Fiction" })
+ *
+ * 5. Find in-stock books:
+ *    db.books.find({ in_stock: true })
+ */ 
+>>>>>>> 0fcd1a6b59e5934a6c57cfca568ccf5922ad1d48
